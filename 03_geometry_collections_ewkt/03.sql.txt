@@ -1,0 +1,16 @@
+SELECT ST_Collect( -- poligony w kolekcje poligonow
+    ST_MakePolygon(
+        ST_AddPoint( -- punkt na linii zeby zamknac
+            dumped.geom,
+            ST_StartPoint(dumped.geom)
+        )
+    )
+) AS geometria_multipolygon
+FROM (
+    -- multilinestring na linestringi ale tylko jak maja min 3 punkty
+    SELECT (ST_Dump(geometria)).geom
+    FROM obiekty
+    WHERE nazwa = 'obiekt4'
+) AS dumped
+WHERE 
+    ST_NumPoints(dumped.geom) >= 3;

@@ -1,0 +1,17 @@
+WITH nowe_poi AS (
+  SELECT t2019.geom, t2019.type
+  FROM T2019_KAR_POI_TABLE t2019
+  LEFT JOIN T2018_KAR_POI_TABLE t2018
+    ON ST_Equals(t2019.geom, t2018.geom)
+  WHERE t2018.geom IS NULL
+)
+-- nowe poi z nowymi budynkami
+SELECT
+  p.type,
+  COUNT(DISTINCT p.geom) AS liczba_nowych_poi
+FROM
+  nowe_poi p
+JOIN
+  nowe_budynki b ON ST_DWithin(p.geom, b.geom, 500)
+GROUP BY
+  p.type;

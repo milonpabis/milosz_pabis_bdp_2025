@@ -1,0 +1,6 @@
+CREATE TABLE nowe_budynki AS
+SELECT t2019.*
+FROM T2019_KAR_BUILDINGS t2019
+LEFT JOIN T2018_KAR_BUILDINGS t2018
+  ON ST_Equals(t2019.geom, t2018.geom)
+WHERE t2018.geom IS NULL; -- rekordy z 2019 które nie znalazły pary
